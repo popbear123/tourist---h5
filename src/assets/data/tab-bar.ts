@@ -1,4 +1,6 @@
-export const tabbarList = [
+import type { ITabBarItem } from './types'
+
+export const tabbarList: ITabBarItem[] = [
   {
     text: '首页',
     imageURL: 'img/tabbar/tab_home.png',
@@ -20,7 +22,7 @@ export const tabbarList = [
   {
     text: '消息',
     imageURL: 'img/tabbar/tab_message.png',
-    activeImageURL: 'img/tabbar/tab_message_active.png',
+    activeImageURL: 'img/tabbar/tab_message.png',
     path: '/message'
   }
 ]

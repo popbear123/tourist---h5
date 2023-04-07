@@ -1,9 +1,12 @@
+<script setup lang="ts">
+import TabBar from '@/components/tab-bar/tab-bar.vue'
+</script>
+
 <template>
   <div class="app">
     <router-view></router-view>
+    <tab-bar></tab-bar>
   </div>
 </template>
 
-<script lang="ts" setup></script>
-
-<style lang="scss" scoped></style>
+<style lang="scss"></style>
