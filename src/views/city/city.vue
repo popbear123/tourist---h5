@@ -30,58 +30,7 @@ cityStore.getAllCity()
       <template v-for="value in cityStore.allCity" :key="value.title">
         <van-tab :title="value.title">
           <div class="tab-content">
-            <ul>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-              <li>标题</li>
-            </ul>
+            {{ value.cities }}
           </div>
         </van-tab>
       </template>
