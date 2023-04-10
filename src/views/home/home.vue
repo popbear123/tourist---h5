@@ -4,10 +4,20 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function locationClick() {
-  navigator.geolocation.getCurrentPosition((res) => {
-    console.log(res)
-    router.push('/city')
-  })
+  navigator.geolocation.getCurrentPosition(
+    (res) => {
+      console.log(res)
+      router.push('/city')
+    },
+    (err) => {
+      console.log(err)
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 30000,
+      timeout: 15000
+    }
+  )
 }
 </script>
 

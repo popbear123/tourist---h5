@@ -2,19 +2,23 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCityStore } from '@/store/modules'
+import { storeToRefs } from 'pinia'
+
+import TabContent from './cpns/tab-content.vue'
 
 const router = useRouter()
 
 // 搜索框
 const searchValue = ref('')
 function cancel() {
-  router.push('/home')
+  router.back()
 }
 
 // tabs
-const tabActive = ref()
+const tabActive = ref<'cityGroup' | 'cityGroupOverSea'>('cityGroup')
 const cityStore = useCityStore()
 cityStore.getAllCity()
+const { allCity } = storeToRefs(cityStore)
 </script>
 
 <template>
@@ -26,12 +30,11 @@ cityStore.getAllCity()
       show-action
       @cancel="cancel"
     />
+
     <van-tabs v-model:active="tabActive">
-      <template v-for="value in cityStore.allCity" :key="value.title">
-        <van-tab :title="value.title">
-          <div class="tab-content">
-            {{ value.cities }}
-          </div>
+      <template v-for="(value, key) in allCity" :key="value.title">
+        <van-tab :title="value.title" :name="key">
+          <tab-content :cities="allCity[tabActive]?.cities"></tab-content>
         </van-tab>
       </template>
     </van-tabs>
@@ -43,9 +46,5 @@ cityStore.getAllCity()
   --van-search-left-icon-color: var(--primary-color);
   --van-tabs-line-height: 50px;
   --van-tabs-bottom-bar-color: var(--primary-color);
-  .tab-content {
-    height: calc(100vh - 104px);
-    overflow-y: auto;
-  }
 }
 </style>
