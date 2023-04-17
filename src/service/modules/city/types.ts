@@ -1,4 +1,16 @@
 export interface IGetCityAll {
+  data: IGetCityAllData
+  errTip: any
+  errcode: number
+  errmsg: null | string
+  referTraceId: string
+  ret: boolean
+  trace: any
+  ver: string
+  _id: string
+}
+
+export interface IGetCityAllData {
   cityGroup: {
     cities: ICities[]
     hotCities: ICity[]

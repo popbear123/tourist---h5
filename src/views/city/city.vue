@@ -7,6 +7,7 @@ import { storeToRefs } from 'pinia'
 import TabContent from './cpns/tab-content.vue'
 
 const router = useRouter()
+const cityStore = useCityStore()
 
 // 搜索框
 const searchValue = ref('')
@@ -16,9 +17,13 @@ function cancel() {
 
 // tabs
 const tabActive = ref<'cityGroup' | 'cityGroupOverSea'>('cityGroup')
-const cityStore = useCityStore()
 cityStore.getAllCity()
 const { allCity } = storeToRefs(cityStore)
+
+function chooseCity(cityName: string) {
+  cityStore.chooseCity = cityName
+  router.back()
+}
 </script>
 
 <template>
@@ -34,7 +39,11 @@ const { allCity } = storeToRefs(cityStore)
     <van-tabs v-model:active="tabActive">
       <template v-for="(value, key) in allCity" :key="value.title">
         <van-tab :title="value.title" :name="key">
-          <tab-content :cities="allCity[tabActive]?.cities"></tab-content>
+          <tab-content
+            :cities="allCity[tabActive]?.cities"
+            :hot-cities="allCity[tabActive]?.hotCities"
+            @choose="chooseCity"
+          ></tab-content>
         </van-tab>
       </template>
     </van-tabs>

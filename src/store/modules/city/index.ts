@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { getCityAll } from '@/service'
-import type { IGetCityAll } from '@/service'
+import type { ICityState } from './types'
 
 const useCityStore = defineStore('city', {
-  state: () => ({
-    allCity: {} as IGetCityAll
+  state: (): ICityState => ({
+    allCity: {},
+    chooseCity: '广州'
   }),
 
   actions: {

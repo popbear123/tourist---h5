@@ -21,7 +21,7 @@ class XYRequest {
   }
 
   request<T>(config: AxiosRequestConfig) {
-    return this.instance.request<T>(config)
+    return this.instance.request<T, T>(config)
   }
 
   get<T>(url: string, options?: AxiosRequestConfig) {
