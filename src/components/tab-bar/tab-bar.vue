@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { getAssetsURL } from '@/uitls'
 import { tabbarList } from '@/assets/data'
 
-const initCurrent = computed(() => {
-  const index = tabbarList.findIndex((item) => location.hash.indexOf(item.path) > -1)
-  return index > -1 ? index : 0
+const route = useRoute()
+const current = ref(0)
+watch(route, () => {
+  console.log(route.path)
+  const index = tabbarList.findIndex((item) => route.path === item.path)
+  current.value = index > -1 ? index : 0
 })
-const current = ref(initCurrent.value)
 </script>
 
 <template>

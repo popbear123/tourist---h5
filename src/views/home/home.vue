@@ -1,13 +1,23 @@
 <script lang="ts" setup>
-import { computed, reactive, ref, toRefs } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { useCityStore, useHomeStore } from '@/store/modules'
 import { formatDate } from '@/uitls'
-import { storeToRefs } from 'pinia'
+import { useScroll } from '@/hooks'
+
+import HouseItemV9 from '@/components/house-item-v9/house-item-v9.vue'
+import HouseItemV3 from '@/components/house-item-v3/house-item-v3.vue'
 
 const router = useRouter()
 const cityStore = useCityStore()
+
+// 网络请求
 const homeStore = useHomeStore()
+homeStore.getHomeHotSuggestsAction()
+homeStore.getHomeCategoriesAction()
+homeStore.getHomeHouseListAction()
+const { hotSuggests, categories, houseList } = storeToRefs(homeStore)
 
 // 位置
 function locationClick() {
@@ -44,17 +54,28 @@ function onConfirm(date: Date[]) {
   showDatePicker.value = false
 }
 
-// 热门建议
-homeStore.getHomeHotSuggestsAction()
-const { hotSuggests } = storeToRefs(homeStore)
+// 热门精选
+const { isReachBottom } = useScroll()
+watch(isReachBottom, async (newValue) => {
+  if (newValue) {
+    console.log('触发了下拉加载')
+    await homeStore.getHomeHouseListAction()
+    isReachBottom.value = false
+  }
+})
 </script>
 
 <template>
   <div class="home">
+    <!-- navbar -->
     <div class="nav-bar">爱在旅途</div>
+
+    <!-- banner -->
     <div class="banner">
       <img src="@/assets/img/home/banner.webp" alt="" />
     </div>
+
+    <!-- info-box -->
     <div class="info-box">
       <!-- 位置 -->
       <div class="location-bar" @click="locationClick">
@@ -110,11 +131,44 @@ const { hotSuggests } = storeToRefs(homeStore)
       <!-- 搜索按钮 -->
       <div class="search-btn">开始搜索</div>
     </div>
+
+    <!-- 推荐类别 -->
+    <div class="recommend-categories">
+      <template v-for="item in categories" :key="item.id">
+        <div class="recommend-category">
+          <img :src="item.pictureUrl" class="img" />
+          <text class="text">{{ item.title }}</text>
+        </div>
+      </template>
+    </div>
+
+    <!-- 热门精选 -->
+    <div class="hot-recommends">
+      <h2 class="title">热门精选</h2>
+      <div class="house-list">
+        <template v-for="item in houseList" :key="item.data.houseId">
+          <house-item-v9
+            v-if="item.discoveryContentType === 9"
+            class="house-item"
+            :item="item"
+          ></house-item-v9>
+          <house-item-v3
+            v-if="item.discoveryContentType === 3"
+            class="house-item"
+            :item="item"
+          ></house-item-v3>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .home {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding-bottom: 50px;
   .nav-bar {
     height: 46px;
     display: flex;
@@ -125,6 +179,7 @@ const { hotSuggests } = storeToRefs(homeStore)
     background-color: #fff;
     font-weight: 500;
   }
+
   .banner {
     height: 125.06px;
     img {
@@ -132,8 +187,9 @@ const { hotSuggests } = storeToRefs(homeStore)
       height: 100%;
     }
   }
+
   .info-box {
-    padding: 0 20px;
+    padding: 0 20px 20px 20px;
     .location-bar {
       display: flex;
       align-items: center;
@@ -232,7 +288,7 @@ const { hotSuggests } = storeToRefs(homeStore)
     }
 
     .search-btn {
-      width: 342px;
+      width: 100%;
       height: 38px;
       max-height: 50px;
       font-weight: 500;
@@ -241,7 +297,51 @@ const { hotSuggests } = storeToRefs(homeStore)
       text-align: center;
       border-radius: 20px;
       color: #fff;
-      background-image: var(--tjc-theme-linear-gradient, linear-gradient(90deg, #fa8c1d, #fcaf3f));
+      background-image: var(--linear-gradient);
+    }
+  }
+
+  .recommend-categories {
+    display: flex;
+    padding: 0 8px;
+    background-color: #fff;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .recommend-category {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 80px;
+      padding: 0 12px;
+      box-sizing: border-box;
+      .img {
+        width: 32px;
+        height: 32px;
+      }
+      .text {
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .hot-recommends {
+    .title {
+      margin: 20px 0 0 20px;
+    }
+    .house-list {
+      padding: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      .house-item {
+        width: 50%;
+      }
     }
   }
 }
